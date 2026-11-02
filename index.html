@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Thanksgiving Countdown</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+</style>
+</head>
+<body>
+
+<div id="thanksgiving-countdown" style="
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #B5562B 0%, #4A2C1A 100%);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  box-sizing: border-box;
+">
+  <div style="font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #FFE2B8; font-weight: 600;">
+    🦃 Countdown to Thanksgiving
+  </div>
+  <div id="thanksgiving-days" style="font-size: 42px; font-weight: 700; margin: 8px 0; color: #ffffff;">
+    --
+  </div>
+  <div id="thanksgiving-label" style="font-size: 12px; color: #E8D3BF;">
+    Days Remaining
+  </div>
+</div>
+
+<script>
+(function() {
+  // US Thanksgiving: fourth Thursday of November
+  function thanksgivingFor(year) {
+    var nov1 = new Date(year, 10, 1);
+    var offset = (4 - nov1.getDay() + 7) % 7; // days until first Thursday
+    return new Date(year, 10, 1 + offset + 21);
+  }
+
+  function updateCountdown() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var thanksgiving = thanksgivingFor(year);
+    var dayAfter = new Date(year, 10, thanksgiving.getDate() + 1);
+
+    // Only roll to next year once Thanksgiving Day is fully over
+    if (now >= dayAfter) {
+      thanksgiving = thanksgivingFor(year + 1);
+    }
+
+    var msPerDay = 1000 * 60 * 60 * 24;
+    var diff = Math.ceil((thanksgiving - now) / msPerDay);
+
+    var daysEl = document.getElementById('thanksgiving-days');
+    var labelEl = document.getElementById('thanksgiving-label');
+
+    if (diff <= 0) {
+      daysEl.textContent = 'Today!';
+      labelEl.textContent = 'Happy Thanksgiving';
+    } else {
+      daysEl.textContent = diff;
+      labelEl.textContent = diff === 1 ? 'Day Remaining' : 'Days Remaining';
+    }
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000 * 60 * 60);
+})();
+</script>
+
+</body>
+</html>
